@@ -86,4 +86,8 @@ This is the place for you to write reflections:
 
 #### Reflection Subscriber-1
 
+1. Di tutorial ini, kita menggunakan `RwLock<Vec<Notification>>` untuk men-sinkronisasi akses ke daftar notifikasi. `RwLock` diperlukan karena beberapa bagian program bisa read atau modify notifikasi secara bersamaan. Dengan `RwLock`, beberapa thread bisa membaca secara bersamaan, tetapi hanya satu thread yang dapat write, sehingga bisa mencegah *race condition* dan meningkatkan performa. Jika menggunakan `Mutex<Vec<Notification>>`, setiap akses baik read atau write akan terkunci, menyebabkan contention yang tidak perlu.
+
+2. Di Java, variabel static dibagikan ke semua instance kelas dan bisa dimodifikasi secara bebas. Namun, Rust punya aturan ketat untuk mencegah race condition dan akses memori yang tidak aman. Rust mengharuskan variabel statis bersifat immutable atau synchronized. Dalam tutorial ini, kita menggunakan `lazy_static!` untuk mendefinisikan `NOTIFICATIONS` sebagai `RwLock<Vec<Notification>>`, hal ini penting untuk memastikan bahwa modifikasi tetap aman dalam *environment* multi-threading. Tanpa mekanisme ini, Rust tidak mengizinkan direct mutation pada variabel static karena adanya potensi undefined behavior.
+
 #### Reflection Subscriber-2
